@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}My Crypto Balances{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>My Crypto Balances</h2>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('main.add_crypto_balance') }}" class="btn btn-primary">Add Balance</a>
+            <a href="{{ url_for('wallet.create_wallet') }}" class="btn btn-success">Create New Wallet</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">My Wallets</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.wallets.all() %}
+                        <div class="list-group">
+                            {% for wallet in current_user.wallets.all() %}
+                                <a href="{{ url_for('wallet.wallet_details', wallet_id=wallet._id) }}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ wallet.name }}</h6>
+                                        <small>{{ wallet.blockchain_type }}</small>
+                                    </div>
+                                    <p class="mb-1 text-break">{{ wallet.address }}</p>
+                                    <small>Created: {{ wallet.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">You don't have any wallets yet.</p>
+                        <a href="{{ url_for('wallet.create_wallet') }}" class="btn btn-primary">Create Your First Wallet</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Total Balances</h5>
+                </div>
+                <div class="card-body">
+                    {% if balances %}
+                        <div class="list-group">
+                            {% for balance in balances %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ balance.crypto_type }}</h6>
+                                        <span class="h5 mb-0">{{ balance.amount }}</span>
+                                    </div>
+                                    <small class="text-muted">Last updated: {{ balance.last_updated.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No balances recorded yet.</p>
+                        <a href="{{ url_for('main.add_crypto_balance') }}" class="btn btn-primary">Add Your First Balance</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

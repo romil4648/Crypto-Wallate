@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Crypto Wallet{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>My Wallets</h2>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('wallet.create_wallet') }}" class="btn btn-primary">Create New Wallet</a>
+        </div>
+    </div>
+
+    {% if wallets %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for wallet in wallets %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ wallet.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ wallet.blockchain_type }}</h6>
+                            <p class="card-text">
+                                <small class="text-muted">Address:</small><br>
+                                <span class="text-break">{{ wallet.address }}</span>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">Created:</small><br>
+                                {{ wallet.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ url_for('wallet.wallet_details', wallet_id=wallet._id) }}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You don't have any wallets yet. <a href="{{ url_for('wallet.create_wallet') }}">Create your first wallet</a>.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

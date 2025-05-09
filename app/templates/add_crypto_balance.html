@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Add Crypto Balance{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Add Crypto Balance</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('main.add_crypto_balance') }}">
+                        <div class="mb-3">
+                            <label for="crypto_type" class="form-label">Cryptocurrency</label>
+                            <select class="form-select" id="crypto_type" name="crypto_type" required>
+                                <option value="">Select a cryptocurrency</option>
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT-ETH">Tether (USDT) [Ethereum]</option>
+                                <option value="USDT-BSC">Tether (USDT) [BSC]</option>
+                                <option value="HAM-ETH">Hamster (HAM) [Ethereum]</option>
+                                <option value="HAM-BSC">Hamster (HAM) [BSC]</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="amount" name="amount" step="0.00000001" min="0" required>
+                                <span class="input-group-text" id="crypto-symbol">-</span>
+                            </div>
+                            <div class="form-text">Enter the amount of cryptocurrency you hold.</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Add Balance</button>
+                            <a href="{{ url_for('main.crypto_balances') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('crypto_type').addEventListener('change', function() {
+    const symbol = this.value;
+    document.getElementById('crypto-symbol').textContent = symbol;
+});
+</script>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Send Transaction - {{ wallet.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Send {{ wallet.blockchain_type }}</h2>
+            <p class="text-muted">From: {{ wallet.name }}</p>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('wallet.wallet_details', wallet_id=wallet._id) }}" class="btn btn-secondary">Back to Wallet</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.recipient_address.label(class="form-label") }}
+                            {{ form.recipient_address(class="form-control", placeholder="Enter recipient's address") }}
+                            {% if form.recipient_address.errors %}
+                                {% for error in form.recipient_address.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.amount.label(class="form-label") }}
+                            {{ form.amount(class="form-control", placeholder="Enter amount") }}
+                            {% if form.amount.errors %}
+                                {% for error in form.amount.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.fee.label(class="form-label") }}
+                            {{ form.fee(class="form-control", placeholder="Enter transaction fee") }}
+                            {% if form.fee.errors %}
+                                {% for error in form.fee.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

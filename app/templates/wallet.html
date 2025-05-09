@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{{ wallet.name }} - Crypto Wallet{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>{{ wallet.name }}</h2>
+            <p class="text-muted">{{ wallet.blockchain_type }}</p>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('wallet.send_transaction', wallet_id=wallet._id) }}" class="btn btn-primary">Send Transaction</a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWalletModal">
+                Delete Wallet
+            </button>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Wallet Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Address:</strong><br>
+                    <span class="text-break">{{ wallet.address }}</span>
+                    <button class="btn btn-sm btn-outline-secondary copy-address" data-address="{{ wallet.address }}">
+                        Copy Address
+                    </button>
+                    </p>
+                    <p><strong>Balances:</strong></p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Symbol</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for b in balances %}
+                            <tr>
+                                <td>{{ b.name }}</td>
+                                <td>{{ b.symbol }}</td>
+                                <td>{{ '%.8f'|format(b.amount) if b.amount != 0 else '0' }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <p><strong>Created:</strong><br>
+                    {{ wallet.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Transaction History</h5>
+                </div>
+                <div class="card-body">
+                    {% if transactions %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Fee</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tx in transactions %}
+                                        <tr>
+                                            <td>{{ tx.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                            <td>
+                                                {% if tx.from_address == wallet.address %}
+                                                    Sent
+                                                {% else %}
+                                                    Received
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ tx.amount }} {{ wallet.blockchain_type }}</td>
+                                            <td>{{ tx.fee }} {{ wallet.blockchain_type }}</td>
+                                            <td>
+                                                <span class="badge {% if tx.status == 'completed' %}bg-success{% elif tx.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                                    {{ tx.status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No transactions yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Wallet Modal -->
+<div class="modal fade" id="deleteWalletModal" tabindex="-1" aria-labelledby="deleteWalletModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteWalletModalLabel">Delete Wallet</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this wallet? This action cannot be undone.</p>
+                <p class="text-danger">Warning: If this wallet contains any cryptocurrency, make sure to transfer it to another wallet before deleting.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('wallet.delete_wallet', wallet_id=wallet._id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete Wallet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

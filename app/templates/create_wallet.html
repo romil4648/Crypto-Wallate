@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Create Wallet - Crypto Wallet{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Create New Wallet</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('wallet.create_wallet') }}">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                            {% for error in form.name.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.blockchain.label(class="form-label") }}
+                            <select name="blockchain" class="form-select" id="blockchain">
+    <option value="ethereum">Ethereum (ETH, USDT, HAM, ERC-20 tokens, high security, higher fees)</option>
+    <option value="binance">Binance Smart Chain (BNB, USDT, HAM, BEP-20 tokens, low fees)</option>
+    <option value="bitcoin">Bitcoin (BTC, native coin only, highest security, slowest, highest fees)</option>
+    <option value="hamster-eth">Hamster (Ethereum) [ERC-20]</option>
+    <option value="hamster-bsc">Hamster (BSC) [BEP-20]</option>
+    <option value="usdt-eth">Tether USDT (Ethereum) [ERC-20]</option>
+    <option value="usdt-bsc">Tether USDT (BSC) [BEP-20]</option>
+</select>
+                            {% for error in form.blockchain.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                    <div class="alert alert-warning mt-4">
+                        <strong>Important:</strong> When a wallet is created, you will be provided with an encryption key. 
+                        Please store this key safely as it is required to decrypt your private key for transactions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

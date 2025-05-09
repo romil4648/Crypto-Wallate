@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - Crypto Wallet{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to Crypto Wallet</h1>
+            <p class="lead mb-5">A secure and user-friendly cryptocurrency wallet for managing your digital assets.</p>
+            
+            {% if current_user.is_authenticated %}
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='image/secure.svg') }}" alt="Secure Storage" class="feature-icon">
+                    <h3 class="card-title">Secure Storage</h3>
+                    <p class="card-text">Your private keys are encrypted and stored securely. Only you have access to your funds.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='image/wallet.svg') }}" alt="Multiple Blockchains" class="feature-icon">
+                    <h3 class="card-title">Multiple Blockchains</h3>
+                    <p class="card-text">Support for various cryptocurrencies including Bitcoin, Ethereum, and more.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='image/transaction.svg') }}" alt="Easy Transactions" class="feature-icon">
+                    <h3 class="card-title">Easy Transactions</h3>
+                    <p class="card-text">Send and receive cryptocurrencies with just a few clicks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
